@@ -2,12 +2,12 @@
 // CONFIGURATION — Edit these values for your Discord server
 // ============================================================
 const CONFIG = {
-  WEBHOOK_URL: 'https://discord.com/api/webhooks/1508490753784152229/2wKdOZuCETLKraReRhbHuCkWFJ0B7OsB690dzcSaMF_dxruSjjoG_ScyYdmxJg3kxBvL',
-  SERVER_NAME: '|ROP| Right Order Party',
+  WEBHOOK_URL: 'https://discord.com/api/webhooks/1548426443849990235/-yEi4Dbwr2cbmDXrEwCjUw6fBITijXHVK0pTI_USWB2gf8ampOdRdT0G_vs3Eh_D5KlE',
+  SERVER_NAME: 'צוות סקודה',
   // Optional: set a Discord thread ID to post all applications into a specific thread
   THREAD_ID: null,
   // Webhook bot appearance
-  WEBHOOK_USERNAME: '📋 ROP Application System',
+  WEBHOOK_USERNAME: '📋 צוות סקודה Application System',
   WEBHOOK_AVATAR: 'https://cdn.discordapp.com/emojis/1056479967568371712.png', // set to any image URL or null
   // Embed accent colors
   COLOR_PENDING:  5793266,  // Discord Blurple
@@ -28,11 +28,8 @@ const ANTI_SPAM = {
   MAX_PER_DAY: 3,
 };
 
-/**
- * Check if the current browser session is allowed to submit.
- * Returns { allowed: boolean, reason: string, remainingMs: number }
- */
 function checkAntiSpam(discordId) {
+  return { allowed: true };
   try {
     const raw = localStorage.getItem(ANTI_SPAM.STORAGE_KEY);
     if (!raw) return { allowed: true };
@@ -48,7 +45,7 @@ function checkAntiSpam(discordId) {
         const mins = Math.ceil(remainingMs / 60000);
         return {
           allowed: false,
-          reason: `You recently submitted an application. Please wait ${mins} minute${mins !== 1 ? 's' : ''} before trying again.`,
+          reason: `שלחת מועמדות לאחרונה. אנא המתן/י ${mins} דקות לפני ניסיון נוסף.`,
           remainingMs
         };
       }
@@ -61,7 +58,7 @@ function checkAntiSpam(discordId) {
       if (lastDate === today && data.submissionsToday >= ANTI_SPAM.MAX_PER_DAY) {
         return {
           allowed: false,
-          reason: `You have reached the maximum of ${ANTI_SPAM.MAX_PER_DAY} applications today. Please try again tomorrow.`,
+          reason: `הגעת למגבלה של ${ANTI_SPAM.MAX_PER_DAY} מועמדויות היום. אנא נסה/י שוב מחר.`,
           remainingMs: 0
         };
       }
@@ -153,88 +150,67 @@ async function sendWithRetry(url, body, method, retries, delay) {
 
 const ROLE_SCHEMAS = {
   discord_staff: {
-    title: "Discord Staff Team",
+    title: "צוות סטאף דיסקורד",
     questions: [
-      { id: 'hours_active',   label: 'How many hours per week can you dedicate to the server?', type: 'number', step: 2, min: 1, max: 168, placeholder: 'e.g. 15', required: true },
-      { id: 'why_staff',      label: 'Why do you want to join our staff team?', type: 'textarea', step: 2, placeholder: 'Tell us your motivation...', required: true },
-      { id: 'experience',     label: 'What prior moderation/staff experience do you have?', type: 'textarea', step: 2, placeholder: 'Mention server names, sizes, or responsibilities...', required: true },
-      { id: 'strengths',      label: 'What are your key strengths?', type: 'textarea', step: 2, placeholder: 'What makes you stand out?', required: true },
-      
-      { id: 'weaknesses',     label: 'What are your weaknesses, and how do you manage them?', type: 'textarea', step: 3, placeholder: 'Be honest - we value self-awareness...', required: true },
-      { id: 'stress_handle',  label: 'How do you handle stressful situations or conflict?', type: 'textarea', step: 3, placeholder: 'Explain your coping mechanisms...', required: true },
-      { id: 'handle_spam',    label: 'Scenario: A user is spamming links in chat. What do you do?', type: 'textarea', step: 3, placeholder: 'Detail your step-by-step reaction...', required: true },
-      { id: 'handle_argument',label: 'Scenario: Two members are arguing in text/voice. How do you de-escalate?', type: 'textarea', step: 3, placeholder: 'How do you handle conflict between users?', required: true },
-      
-      { id: 'handle_dm_adv',  label: 'Scenario: A member is reported for advertising in DMs. What do you do?', type: 'textarea', step: 4, placeholder: 'What proof do you ask for, and what action is taken?', required: true },
-      { id: 'handle_abuse',   label: 'Scenario: You suspect another staff member is abusing power. What do you do?', type: 'textarea', step: 4, placeholder: 'How do you handle internal staff conflicts?', required: true },
-      { id: 'handle_nsfw',    label: 'Scenario: A user posts NSFW content in general chat. What is your response?', type: 'textarea', step: 4, placeholder: 'What actions do you take immediately?', required: true },
-      { id: 'handle_unsure',  label: 'If you are unsure of a moderation decision, what do you do?', type: 'textarea', step: 4, placeholder: 'Who do you consult, or how do you decide?', required: true },
-      
-      { id: 'hobbies',        label: 'What are your hobbies or interests outside of Discord?', type: 'textarea', step: 5, placeholder: 'We want to know the person behind the screen!', required: true },
-      { id: 'server_mgmt',    label: 'Do you have experience with server management, bots, or configurations?', type: 'textarea', step: 5, placeholder: 'e.g. setting up dyno, permissions, webhooks...', required: true },
-      { id: 'guidelines_agree', label: 'Do you agree to follow all staff guidelines and remain active?', type: 'checkbox', step: 5, required: true, checkboxLabel: 'I agree to behave professionally, uphold server rules, and communicate with the team.' },
-      { id: 'additional_info', label: 'Is there anything else you would like to share?', type: 'textarea', step: 5, placeholder: 'Anything else we should know?', required: true }
+      { id: 'hours_active',   label: 'כמה שעות בשבוע תוכל/י להקדיש לשרת?', type: 'number', step: 2, min: 1, max: 168, placeholder: 'לדוגמה: 15', required: true },
+      { id: 'why_staff',      label: 'למה אתה/את רוצה להצטרף לצוות שלנו?', type: 'textarea', step: 2, placeholder: 'ספר/י לנו על המוטיבציה שלך...', required: true },
+      { id: 'experience',     label: 'איזה ניסיון קודם יש לך במידור / ניהול שרתים?', type: 'textarea', step: 2, placeholder: 'ציין שמות שרתים, גדלים, או תפקידים שמילאת...', required: true },
+      { id: 'strengths',      label: 'מה החוזקות המרכזיות שלך?', type: 'textarea', step: 2, placeholder: 'מה מייחד אותך?', required: true },
+
+      { id: 'weaknesses',     label: 'מה החולשות שלך, וכיצד אתה/את מתמודד/ת איתן?', type: 'textarea', step: 3, placeholder: 'היה/י כנה - אנחנו מעריכים מודעות עצמית...', required: true },
+      { id: 'stress_handle',  label: 'כיצד אתה/את מתמודד/ת עם מצבי לחץ או קונפליקטים?', type: 'textarea', step: 3, placeholder: 'הסבר/י את מנגנוני ההתמודדות שלך...', required: true },
+      { id: 'handle_spam',    label: 'תרחיש: משתמש שולח ספאם של לינקים בצ׳אט. מה אתה/את עושה?', type: 'textarea', step: 3, placeholder: 'פרט/י את תגובתך שלב אחר שלב...', required: true },
+      { id: 'handle_argument',label: 'תרחיש: שני חברים מתווכחים בטקסט/קול. כיצד תנסה/י לפייס?', type: 'textarea', step: 3, placeholder: 'כיצד אתה/את מטפל/ת בקונפליקט בין משתמשים?', required: true },
+
+      { id: 'handle_dm_adv',  label: 'תרחיש: חבר מדווח על פרסום פרטי (DM Ads). מה אתה/את עושה?', type: 'textarea', step: 4, placeholder: 'איזו הוכחה אתה/את דורש/ת, ואיזו פעולה תינקט?', required: true },
+      { id: 'handle_abuse',   label: 'תרחיש: אתה/את חושד/ת שחבר צוות אחר מנצל לרעה את סמכויותיו. מה אתה/את עושה?', type: 'textarea', step: 4, placeholder: 'כיצד אתה/את מטפל/ת בקונפליקטים פנימיים?', required: true },
+      { id: 'handle_nsfw',    label: 'תרחיש: משתמש מפרסם תוכן לא הולם בצ׳אט הכללי. מה תגובתך?', type: 'textarea', step: 4, placeholder: 'אילו פעולות אתה/את נוקט/ת באופן מיידי?', required: true },
+      { id: 'handle_unsure',  label: 'אם אינך בטוח/ה בנוגע להחלטת מידור, מה אתה/את עושה?', type: 'textarea', step: 4, placeholder: 'עם מי אתה/את מתייעץ/ת, או כיצד אתה/את מחליט/ה?', required: true },
+
+      { id: 'hobbies',        label: 'מה התחביבים או תחומי העניין שלך מחוץ לדיסקורד?', type: 'textarea', step: 5, placeholder: 'אנחנו רוצים להכיר את האדם שמאחורי המסך!', required: true },
+      { id: 'server_mgmt',    label: 'האם יש לך ניסיון בניהול שרתים, בוטים או הגדרות?', type: 'textarea', step: 5, placeholder: 'לדוגמה: הגדרת Dyno, הרשאות, webhooks...', required: true },
+      { id: 'guidelines_agree', label: 'האם אתה/את מסכים/ה לעקוב אחר כל הנחיות הצוות ולהישאר פעיל/ה?', type: 'checkbox', step: 5, required: true, checkboxLabel: 'אני מסכים/ה להתנהג בצורה מקצועית, לשמור על כללי השרת ולתקשר עם הצוות.' },
+      { id: 'additional_info', label: 'האם יש משהו נוסף שתרצה/י לשתף?', type: 'textarea', step: 5, placeholder: 'כל דבר נוסף שכדאי שנדע?', required: true }
     ]
   },
   media_team: {
-    title: "Media Team",
+    title: "צוות מדיה",
     questions: [
-      { id: 'media_role',     label: 'What specific role are you applying for?', type: 'select', step: 2, options: ['Graphic Designer', 'Video Editor', 'Content Creator', 'Social Media Manager', 'Other'], required: true },
-      { id: 'hours_active',   label: 'How many hours per week can you dedicate to media work?', type: 'number', step: 2, min: 1, max: 168, placeholder: 'e.g. 10', required: true },
-      { id: 'portfolio',      label: 'Please provide a link to your portfolio or past work.', type: 'text', step: 2, placeholder: 'e.g. Behance, YouTube channel, Drive link...', required: true, helperText: 'Provide links to your graphic designs, edit reels, or channels.' },
-      { id: 'tools_used',     label: 'What software/tools do you specialize in?', type: 'text', step: 2, placeholder: 'e.g. Photoshop, Premiere Pro, After Effects, Figma, Canva...', required: true },
-      
-      { id: 'why_media',      label: 'Why do you want to join our Media Team?', type: 'textarea', step: 3, placeholder: 'Tell us why you want to design/create for ROP...', required: true },
-      { id: 'prior_work',     label: 'Detail any prior experience creating media content for servers or organizations.', type: 'textarea', step: 3, placeholder: 'Describe your past projects and responsibilities...', required: true },
-      { id: 'strengths_media', label: 'What are your core creative strengths?', type: 'textarea', step: 3, placeholder: 'e.g. visual styling, motion graphics, audio design, branding...', required: true },
-      
-      { id: 'handle_negative_feedback', label: 'Scenario: A piece of content you designed/edited gets negative feedback. How do you handle it?', type: 'textarea', step: 4, placeholder: 'Explain your reaction and process...', required: true },
-      { id: 'handle_deadline', label: 'Scenario: We need a thumbnail or promo video created on short notice (e.g. 24 hours). How do you handle it?', type: 'textarea', step: 4, placeholder: 'How do you handle urgent tasks or tight deadlines?', required: true },
-      { id: 'handle_disagreement', label: 'Scenario: You disagree with a lead or staff member on design direction. How do you resolve this?', type: 'textarea', step: 4, placeholder: 'Explain how you approach differences in creative vision...', required: true },
-      
-      { id: 'hobbies',        label: 'What are your hobbies or interests outside of media work?', type: 'textarea', step: 5, placeholder: 'Tell us about yourself...', required: true },
-      { id: 'guidelines_agree', label: 'Do you agree to follow ROP media guidelines and represent the server professionally?', type: 'checkbox', step: 5, required: true, checkboxLabel: 'I agree to follow design guidelines, use licensed assets, and communicate professionally.' },
-      { id: 'additional_info', label: 'Is there anything else you would like to share?', type: 'textarea', step: 5, placeholder: 'Anything else we should know?', required: true }
-    ]
-  },
-  rbx_dev: {
-    title: "Roblox Dev Team",
-    questions: [
-      { id: 'dev_role',       label: 'What is your primary development role?', type: 'select', step: 2, options: ['Scripter (Luau)', 'Builder / Map Designer', 'UI/UX Designer', '3D Modeler (Blender)', 'Animator', 'Other'], required: true },
-      { id: 'hours_active',   label: 'How many hours per week can you dedicate to project development?', type: 'number', step: 2, min: 1, max: 168, placeholder: 'e.g. 12', required: true },
-      { id: 'roblox_profile', label: 'Please provide a link to your Roblox Profile.', type: 'text', step: 2, placeholder: 'e.g. https://www.roblox.com/users/123456/profile', required: true },
-      { id: 'portfolio',      label: 'Please provide a link to your portfolio or showcases.', type: 'text', step: 2, placeholder: 'e.g. DevForum portfolio, GitHub, Roblox place links...', required: true },
-      
-      { id: 'prior_games',    label: 'List any Roblox games you have contributed to or worked on.', type: 'textarea', step: 3, placeholder: 'Provide links and detail what you did in each game...', required: true },
-      { id: 'why_dev',        label: 'Why do you want to join the ROP Dev Team?', type: 'textarea', step: 3, placeholder: 'What motivates you to build/script for ROP?', required: true },
-      { id: 'collaboration',  label: 'How do you handle working as a team with other devs (builders, scripters, modelers)?', type: 'textarea', step: 3, placeholder: 'Describe your teamwork and communication habits...', required: true },
-      
-      { id: 'handle_bug',     label: 'Scenario: A critical game-breaking bug is discovered in production right before an event. How do you react?', type: 'textarea', step: 4, placeholder: 'Detail your troubleshooting and response steps...', required: true },
-      { id: 'handle_refactor', label: 'Scenario: Another developer refactors your scripts or modifies your assets without warning. What do you do?', type: 'textarea', step: 4, placeholder: 'How do you address creative differences or code ownership disputes?', required: true },
-      { id: 'handle_deadline', label: 'Scenario: You are struggling to meet a milestone deadline. What is your action plan?', type: 'textarea', step: 4, placeholder: 'How do you manage stress and communicate delays?', required: true },
-      
-      { id: 'hobbies',        label: 'What are your hobbies or interests outside of development?', type: 'textarea', step: 5, placeholder: 'Tell us about yourself...', required: true },
-      { id: 'guidelines_agree', label: 'Do you agree to follow developer guidelines, protect project assets, and not leak updates?', type: 'checkbox', step: 5, required: true, checkboxLabel: 'I agree to maintain asset security, follow coding/building standards, and cooperate with project leads.' },
-      { id: 'additional_info', label: 'Is there anything else you would like to share?', type: 'textarea', step: 5, placeholder: 'Anything else we should know?', required: true }
+      { id: 'media_role',     label: 'לאיזה תפקיד ספציפי אתה/את מגיש/ה מועמדות?', type: 'select', step: 2, options: ['מעצב/ת גרפי', 'עורך/ת וידאו', 'יוצר/ת תוכן', 'מנהל/ת רשתות חברתיות', 'אחר'], required: true },
+      { id: 'hours_active',   label: 'כמה שעות בשבוע תוכל/י להקדיש לעבודת מדיה?', type: 'number', step: 2, min: 1, max: 168, placeholder: 'לדוגמה: 10', required: true },
+      { id: 'portfolio',      label: 'ספק/י קישור לתיק העבודות או לעבודות קודמות שלך.', type: 'text', step: 2, placeholder: 'לדוגמה: Behance, ערוץ YouTube, קישור Drive...', required: true, helperText: 'ספק/י קישורים לעיצובים, סרטוני עריכה או ערוצים שלך.' },
+      { id: 'tools_used',     label: 'באילו תוכנות/כלים אתה/את מתמחה?', type: 'text', step: 2, placeholder: 'לדוגמה: Photoshop, Premiere Pro, After Effects, Figma, Canva...', required: true },
+
+      { id: 'why_media',      label: 'למה אתה/את רוצה להצטרף לצוות המדיה שלנו?', type: 'textarea', step: 3, placeholder: 'ספר/י לנו למה אתה/את רוצה לעצב/ליצור עבור צוות סקודה...', required: true },
+      { id: 'prior_work',     label: 'תאר/י ניסיון קודם ביצירת תוכן מדיה עבור שרתים או ארגונים.', type: 'textarea', step: 3, placeholder: 'תאר/י פרויקטים קודמים ואחריות שלקחת...', required: true },
+      { id: 'strengths_media', label: 'מה החוזקות היצירתיות המרכזיות שלך?', type: 'textarea', step: 3, placeholder: 'לדוגמה: עיצוב ויזואלי, גרפיקה בתנועה, עיצוב שמע, מיתוג...', required: true },
+
+      { id: 'handle_negative_feedback', label: 'תרחיש: תוכן שעיצבת/ערכת קיבל פידבק שלילי. כיצד אתה/את מתמודד/ת?', type: 'textarea', step: 4, placeholder: 'הסבר/י את תגובתך ותהליך הפעולה שלך...', required: true },
+      { id: 'handle_deadline', label: 'תרחיש: אנחנו צריכים ממך תמונה ממוזערת או סרטון פרסומי בהתראה קצרה (24 שעות). כיצד אתה/את מתמודד/ת?', type: 'textarea', step: 4, placeholder: 'כיצד אתה/את מתמודד/ת עם משימות דחופות?', required: true },
+      { id: 'handle_disagreement', label: 'תרחיש: אתה/את לא מסכים/ה עם ראש צוות על כיוון עיצובי. כיצד אתה/את פותר/ת זאת?', type: 'textarea', step: 4, placeholder: 'הסבר/י כיצד אתה/את מתמודד/ת עם חילוקי דעות יצירתיים...', required: true },
+
+      { id: 'hobbies',        label: 'מה התחביבים או תחומי העניין שלך מחוץ לעבודת מדיה?', type: 'textarea', step: 5, placeholder: 'ספר/י לנו על עצמך...', required: true },
+      { id: 'guidelines_agree', label: 'האם אתה/את מסכים/ה לעמוד בהנחיות המדיה של צוות סקודה ולייצג את השרת בצורה מקצועית?', type: 'checkbox', step: 5, required: true, checkboxLabel: 'אני מסכים/ה לעמוד בהנחיות העיצוב, להשתמש בנכסים מורשים ולתקשר בצורה מקצועית.' },
+      { id: 'additional_info', label: 'האם יש משהו נוסף שתרצה/י לשתף?', type: 'textarea', step: 5, placeholder: 'כל דבר נוסף שכדאי שנדע?', required: true }
     ]
   },
 
   beta_tester: {
-    title: "Beta Tester",
+    title: "בודק/ת בטא",
     questions: [
-      { id: 'hours_active',      label: 'How many hours per week can you dedicate to testing?', type: 'number', step: 2, min: 1, max: 168, placeholder: 'e.g. 8', required: true },
-      { id: 'roblox_profile',   label: 'Please provide a link to your Roblox Profile.', type: 'text', step: 2, placeholder: 'e.g. https://www.roblox.com/users/123456/profile', required: true },
-      { id: 'device_types',     label: 'Which platforms/devices do you primarily play Roblox on?', type: 'select', step: 2, options: ['PC (Windows/Mac)', 'Mobile (iOS)', 'Mobile (Android)', 'Xbox / Console', 'Multiple Platforms'], required: true },
+      { id: 'hours_active',      label: 'כמה שעות בשבוע תוכל/י להקדיש לבדיקות?', type: 'number', step: 2, min: 1, max: 168, placeholder: 'לדוגמה: 8', required: true },
+      { id: 'roblox_profile',    label: 'ספק/י קישור לפרופיל Roblox שלך.', type: 'text', step: 2, placeholder: 'לדוגמה: https://www.roblox.com/users/123456/profile', required: true },
+      { id: 'device_types',      label: 'על אילו פלטפורמות/מכשירים אתה/את משחק/ת ב-Roblox?', type: 'select', step: 2, options: ['PC (Windows/Mac)', 'נייד (iOS)', 'נייד (Android)', 'Xbox / קונסולה', 'מספר פלטפורמות'], required: true },
 
-      { id: 'testing_exp',      label: 'Do you have prior experience beta testing or QA testing games/software? If so, describe it.', type: 'textarea', step: 3, placeholder: 'List any games, software, or servers you have tested for...', required: true },
-      { id: 'bug_report',       label: 'How would you describe and report a bug? Walk us through your process.', type: 'textarea', step: 3, placeholder: 'What information do you include in a bug report? Steps to reproduce, severity...', required: true },
-      { id: 'why_beta',         label: 'Why do you want to become a Beta Tester for ROP?', type: 'textarea', step: 3, placeholder: 'What motivates you to help test and improve our projects?', required: true },
+      { id: 'testing_exp',       label: 'האם יש לך ניסיון קודם בבדיקות בטא או QA? אם כן, תאר/י.', type: 'textarea', step: 3, placeholder: 'ציין/י משחקים, תוכנות או שרתים שבדקת...', required: true },
+      { id: 'bug_report',        label: 'כיצד תתאר/י ותדווח/י על באג? הסבר/י את התהליך שלך.', type: 'textarea', step: 3, placeholder: 'מה כלול בדוח הבאג שלך? שלבים לשחזור, חומרה...', required: true },
+      { id: 'why_beta',          label: 'למה אתה/את רוצה להיות בודק/ת בטא עבור צוות סקודה?', type: 'textarea', step: 3, placeholder: 'מה מניע אותך לעזור לבדוק ולשפר את הפרויקטים שלנו?', required: true },
 
-      { id: 'scenario_crash',   label: 'Scenario: You are in a beta session and the game crashes every time you enter a specific area. What do you do?', type: 'textarea', step: 4, placeholder: 'Describe exactly what you would do, what information you would collect, and how you would report it...', required: true },
-      { id: 'scenario_balance', label: 'Scenario: You find a mechanic that feels unfair or unbalanced but is not technically a bug. How do you handle this?', type: 'textarea', step: 4, placeholder: 'How do you distinguish a bug from a design issue, and how do you report subjective feedback?', required: true },
+      { id: 'scenario_crash',    label: 'תרחיש: אתה/את בסשן בטא והמשחק קורס כל פעם שאתה/את נכנס/ת לאזור מסוים. מה אתה/את עושה?', type: 'textarea', step: 4, placeholder: 'תאר/י בדיוק מה תעשה/י, איזו מידע תאסוף/י וכיצד תדווח/י...', required: true },
+      { id: 'scenario_balance',  label: 'תרחיש: מצאת מכניקה שנראית לא הוגנת אך אינה באג טכני. כיצד אתה/את מטפל/ת בזה?', type: 'textarea', step: 4, placeholder: 'כיצד מבחינים בין באג לבעיית עיצוב, וכיצד מדווחים על פידבק סובייקטיבי?', required: true },
 
-      { id: 'confidentiality',  label: 'Do you understand that beta features are confidential and must not be shared publicly?', type: 'checkbox', step: 5, required: true, checkboxLabel: 'I agree to keep all beta content, unreleased features, and internal feedback strictly confidential.' },
-      { id: 'additional_info',  label: 'Is there anything else you would like to share with us?', type: 'textarea', step: 5, placeholder: 'Any extra context, past experience, or anything else we should know?', required: true }
+      { id: 'confidentiality',   label: 'האם אתה/את מבין/ה שפיצ׳רים בבטא הם סודיים ואסור לשתפם?', type: 'checkbox', step: 5, required: true, checkboxLabel: 'אני מסכים/ה לשמור על סודיות של כל תוכן בטא, פיצ׳רים שטרם שוחררו ופידבקים פנימיים.' },
+      { id: 'additional_info',   label: 'האם יש משהו נוסף שתרצה/י לשתף איתנו?', type: 'textarea', step: 5, placeholder: 'כל הקשר נוסף, ניסיון קודם, או כל דבר אחר שכדאי שנדע?', required: true }
     ]
   }
 };
@@ -279,29 +255,19 @@ function validateAnswerQuality(value, fieldType) {
   if (PLACEHOLDER_TERMS.has(lower)) {
     return {
       valid: false,
-      reason: 'Please provide a valid, detailed answer. Placeholder responses are not accepted.'
+      reason: 'אנא ספק/י תשובה מפורטת ותקינה. תשובות קצרות/פנייה לא מקובלות.'
     };
   }
 
   // Rule 2 — repeated single character or pure punctuation / symbols
-  if (/^[^a-zA-Z0-9]+$/.test(trimmed)) {
+  if (/^[^a-zA-Z0-9\u0590-\u05FF]+$/.test(trimmed)) {
     return {
       valid: false,
-      reason: 'Please provide a valid, detailed answer. Placeholder responses are not accepted.'
+      reason: 'אנא ספק/י תשובה מפורטת ותקינה. תשובות קצרות/פנייה לא מקובלות.'
     };
   }
 
-  // Rule 3 — minimum word count for text and textarea fields only
-  if (fieldType === 'textarea' || fieldType === 'text') {
-    // Count words that have at least 2 alphabetic/numeric characters
-    const words = trimmed.split(/\s+/).filter(w => (w.match(/[a-zA-Z0-9]/g) || []).length >= 2);
-    if (words.length < 3) {
-      return {
-        valid: false,
-        reason: 'Please provide a more detailed answer (at least 3 meaningful words).'
-      };
-    }
-  }
+
 
   return { valid: true, reason: '' };
 }
@@ -380,17 +346,17 @@ document.addEventListener('DOMContentLoaded', () => {
       let stepTitle = '';
       let stepDesc = '';
       if (stepNum === 2) {
-        stepTitle = `Step 2: Role Details & Commitment`;
-        stepDesc = `Provide specific details about your availability and qualifications for the role.`;
+        stepTitle = `שלב 2: פרטי תפקיד ומחויבות`;
+        stepDesc = `ספק/י פרטים ספציפיים על הזמינות שלך והכישורים לתפקיד.`;
       } else if (stepNum === 3) {
-        stepTitle = `Step 3: Background & Motivation`;
-        stepDesc = `Tell us why you want to join and what experiences you bring.`;
+        stepTitle = `שלב 3: רקע ומוטיבציה`;
+        stepDesc = `ספר/י לנו למה אתה/את רוצה להצטרף ומה הניסיון שאתה/את מביא/ה.`;
       } else if (stepNum === 4) {
-        stepTitle = `Step 4: Scenarios & Decision-Making`;
-        stepDesc = `Describe how you handle specific situations or conflicts.`;
+        stepTitle = `שלב 4: תרחישים וקבלת החלטות`;
+        stepDesc = `תאר/י כיצד אתה/את מתמודד/ת עם מצבים ספציפיים או קונפליקטים.`;
       } else if (stepNum === 5) {
-        stepTitle = `Step 5: Agreement & Miscellaneous`;
-        stepDesc = `Almost done! Review the guidelines and provide any final details.`;
+        stepTitle = `שלב 5: הסכמות ומידע נוסף`;
+        stepDesc = `כמעט סיימנו! עיין/י בהנחיות וספק/י פרטים אחרונים.`;
       }
       
       section.innerHTML = `
@@ -424,13 +390,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         const labelHtml = q.type === 'checkbox' 
-          ? `<label>Agreement <span class="required">*</span></label>`
+          ? `<label>הסכמה <span class="required">*</span></label>`
           : `<label for="${q.id}">${q.label} ${q.required ? '<span class="required">*</span>' : ''}</label>`;
            
         const helperHtml = q.helperText ? `<small class="helper-text">${q.helperText}</small>` : '';
         const errorMsg = q.type === 'checkbox'
-          ? `You must agree to continue.`
-          : `Please fill out this field.`;
+          ? `עליך/עלייך להסכים/ה כדי להמשיך.`
+          : `אנא מלא/י שדה זה.`;
         
         group.innerHTML = `
           ${labelHtml}
@@ -552,7 +518,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // Show toast notification
-      showToast('Draft restored from your last visit!');
+      showToast('טיוטה שוחזרה מהביקור האחרון שלך!');
     } catch (e) {
       console.error('Failed to load draft', e);
     }
@@ -616,10 +582,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (input.hasAttribute('required')) {
         if (input.type === 'checkbox') {
           fieldValid = input.checked;
-          errorText = 'You must agree to continue.';
+          errorText = 'עליך/עלייך להסכים/ה כדי להמשיך.';
         } else {
           fieldValid = input.value.trim() !== '';
-          errorText = 'Please fill out this field.';
+          errorText = 'אנא מלא/י שדה זה.';
         }
       }
 
@@ -627,15 +593,15 @@ document.addEventListener('DOMContentLoaded', () => {
       if (fieldValid) {
         if (input.id === 'discord_id') {
           fieldValid = /^\d{17,19}$/.test(input.value.trim());
-          errorText = 'Please enter a valid Discord User ID (numeric, 17\u201319 characters).';
+          errorText = 'אנא הזן/י מזהה דיסקורד תקין (מספרי, 17-19 ספרות).';
         } else if (input.id === 'age') {
           const v = parseInt(input.value);
           fieldValid = !isNaN(v) && v >= 13 && v <= 100;
-          errorText = 'Please enter a valid age (must be at least 13).';
+          errorText = 'אנא הזן/י גיל תקין (חייב להיות לפחות 13).';
         } else if (input.id === 'hours_active') {
           const v = parseInt(input.value);
           fieldValid = !isNaN(v) && v >= 1 && v <= 168;
-          errorText = 'Please enter a number between 1 and 168.';
+          errorText = 'אנא הזן/י מספר בין 1 ל-168.';
         }
       }
 
@@ -649,7 +615,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // Apply or clear invalid state
-      if (errorSpan) errorSpan.textContent = errorText || 'Please fill out this field.';
+      if (errorSpan) errorSpan.textContent = errorText || 'אנא מלא/י שדה זה.';
       group?.classList.toggle('invalid', !fieldValid);
       if (!fieldValid) isValid = false;
     });
@@ -706,8 +672,8 @@ document.addEventListener('DOMContentLoaded', () => {
     statusCard.classList.remove('hidden');
     statusIconSuccess.classList.add('hidden');
     statusIconError.classList.add('hidden');
-    statusTitle.innerText = 'Submitting…';
-    statusMessage.innerText = 'Sending your application to Discord. Please wait.';
+    statusTitle.innerText = 'שולח/ת...';
+    statusMessage.innerText = 'שולח/ת את המועמדות שלך לדיסקורד. אנא המתן/י.';
     statusResetBtn.classList.add('hidden');
 
     try {
@@ -890,16 +856,16 @@ document.addEventListener('DOMContentLoaded', () => {
         recordSubmission(); // anti-spam: log this submission
         clearFormDraft();
 
-        statusTitle.innerText = '✅ Application Submitted!';
-        statusMessage.innerText = 'Your application was sent to the staff review channel successfully. You will be notified on Discord once a decision is made. Thank you for applying!';
+        statusTitle.innerText = '✅ המועמדות נשלחה!';
+        statusMessage.innerText = 'המועמדות שלך נשלחה בהצלחה לערוץ הסקירה של הצוות. תקבל/י הודעה בדיסקורד לאחר קבלת החלטה. תודה שנרשמת/ה!';  
         statusIconSuccess.classList.remove('hidden');
       } else {
         const err = await resp.text();
         throw new Error(`Discord returned ${resp.status}: ${err}`);
       }
     } catch (error) {
-      statusTitle.innerText = 'Submission Failed';
-      statusMessage.innerText = error.message || 'Could not send your application. Please check your connection and try again.';
+      statusTitle.innerText = 'שליחה נכשלה';
+      statusMessage.innerText = error.message || 'לא ניתן היה לשלוח את המועמדות. אנא בדוק/י את החיבור לאינטרנט ונסה/י שוב.';
       statusIconError.classList.remove('hidden');
       statusResetBtn.classList.remove('hidden');
     }
@@ -1023,7 +989,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Close menu
         themeToggleBtn.setAttribute('aria-expanded', 'false');
         themeMenu.classList.add('hidden');
-        showToast(`Theme switched to ${selected.toUpperCase()} mode!`);
+        showToast(`ערכת הנושא שונתה ל-${selected.toUpperCase()}!`);
       });
     });
 
